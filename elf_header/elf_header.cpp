@@ -14,6 +14,13 @@ void readELFHeader(const char* filePath) {
         return;
     }
 
+    if ((header.e_ident[0] ^ 127) || (header.e_ident[1] ^ 69) || (header.e_ident[2] ^ 76) || (header.e_ident[3] ^ 70)) {
+        std::cout<<"这不是一个elf文件"<<std::endl;
+        exit(0);
+    } else {
+        std::cout<<"elf file"<<std::endl;
+    }
+
     // Print ELF header information for demonstration
     std::cout << "ELF头: "<<std::endl;
     std::cout << "  Magic: ";
