@@ -2,11 +2,11 @@
 #include <iomanip>
 
 
-void readELFHeader(std::ifstream& file, Elf32_Ehdr& header) {
+void readELFHeader(std::ifstream& file, Elf64_Ehdr& header) {
     file.read(reinterpret_cast<char*>(&header), sizeof(header));
 }
 
-void disPlayHeader(const Elf32_Ehdr& header)
+void disPlayHeader(const Elf64_Ehdr& header)
 {
     if ((header.e_ident[0] ^ 127) || (header.e_ident[1] ^ 69) || (header.e_ident[2] ^ 76) || (header.e_ident[3] ^ 70)) {
         std::cout<<"这不是一个elf文件,"<<std::endl;
@@ -42,6 +42,18 @@ void disPlayHeader(const Elf32_Ehdr& header)
         std::cout << "该文件数据编码方式非法,可能不是ELF文件或文件内容已被破坏,已停止解析" << std::endl;
         exit(1);
     }
+
+    std::cout << "  版本: " << header.e_ident[6] << "(当前)" << std::endl;
+
+    if (header.e_ident[7] == 0) {
+        std::cout << "  OS/ABI: UNIX - System V" << std::endl;
+    } else if (header.e_ident[7] == 3) {
+        std::cout << "  OS/ABI: Linux" << std::endl;
+    } else {
+        std::cout << "  OS/ABI: 未知" << std::endl;
+    }
+
+    std::cout << "  ABI 版本: " << std::dec << static_cast<int>(header.e_ident[8]) << std::endl;
 
     std::cout << "  类型: ";
     switch (header.e_type)
@@ -105,13 +117,13 @@ void disPlayHeader(const Elf32_Ehdr& header)
     }
     std::cout << "  版本: " << header.e_version << std::endl;
     std::cout << "  入口点地址: " << "0x" <<header.e_entry << std::endl;
-    std::cout << "  程序头起点: " << header.e_phoff << " (bytes into file)" << std::endl;
-    std::cout << "  节头起点: " << header.e_shoff << " (bytes into file)" << std::endl;
+    std::cout << "  程序头起点: " << std::dec << header.e_phoff << " (bytes into file)" << std::endl;
+    std::cout << "  节头起点: " << std::dec << header.e_shoff << " (bytes into file)" << std::endl;
     std::cout << "  标志: " << "0x" << header.e_flags << std::endl;
-    std::cout << "  ELF头大小: " << header.e_ehsize << " (bytes)" << std::endl;
-    std::cout << "  程序头大小: " << header.e_phentsize << " (bytes)" << std::endl;
+    std::cout << "  ELF头大小: " << std::dec << header.e_ehsize << " (bytes)" << std::endl;
+    std::cout << "  程序头大小: " << std::dec << header.e_phentsize << " (bytes)" << std::endl;
     std::cout << "  程序头数量: " << std::dec << header.e_phnum << std::endl;
-    std::cout << "  节头大小: " << header.e_shentsize << " (bytes)" << std::endl;
+    std::cout << "  节头大小: " << std::dec << header.e_shentsize << " (bytes)" << std::endl;
     std::cout << "  节头数量: " << std::dec << header.e_shnum << std::endl;
     std::cout << "  节头字符串表索引: " << std::dec << header.e_shstrndx << std::endl;
 

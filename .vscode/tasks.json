@@ -8,7 +8,8 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
-                "${fileDirname}/elf_header.cpp",
+                "${fileDirname}/elf_header/elf_header.cpp",
+                "${fileDirname}/elf_sections/elf_sections.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],
