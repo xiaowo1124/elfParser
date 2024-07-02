@@ -15,3 +15,4 @@ int main(int argc, char* argv[]) {
     readELFSecitons(file, header, sHeader);
     return 0;
 }
+

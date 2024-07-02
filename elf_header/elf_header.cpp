@@ -116,7 +116,7 @@ void disPlayHeader(const Elf64_Ehdr& header)
         break;
     }
     std::cout << "  版本: " << header.e_version << std::endl;
-    std::cout << "  入口点地址: " << "0x" <<header.e_entry << std::endl;
+    std::cout << "  入口点地址: " << "0x" << std::hex << header.e_entry << std::endl;
     std::cout << "  程序头起点: " << std::dec << header.e_phoff << " (bytes into file)" << std::endl;
     std::cout << "  节头起点: " << std::dec << header.e_shoff << " (bytes into file)" << std::endl;
     std::cout << "  标志: " << "0x" << header.e_flags << std::endl;
