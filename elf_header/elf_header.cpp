@@ -126,5 +126,5 @@ void disPlayHeader(const Elf64_Ehdr& header)
     std::cout << "  节头大小: " << std::dec << header.e_shentsize << " (bytes)" << std::endl;
     std::cout << "  节头数量: " << std::dec << header.e_shnum << std::endl;
     std::cout << "  节头字符串表索引: " << std::dec << header.e_shstrndx << std::endl;
-
+    std::cout << std::endl;
 }
