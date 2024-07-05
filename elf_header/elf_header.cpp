@@ -40,7 +40,7 @@ void disPlayHeader(const Elf64_Ehdr& header)
         exit(1);
     }
 
-    std::cout << "  版本: " << header.e_ident[6] << "(当前)" << std::endl;
+    std::cout << "  版本: " << static_cast<int>(header.e_ident[6]) << "(当前)" << std::endl;
 
     if (header.e_ident[7] == 0) {
         std::cout << "  OS/ABI: UNIX - System V" << std::endl;

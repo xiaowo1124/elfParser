@@ -10,6 +10,7 @@
                 "${file}",
                 "${fileDirname}/elf_header/elf_header.cpp",
                 "${fileDirname}/elf_sections/elf_sections.cpp",
+                "${fileDirname}/program/program.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],

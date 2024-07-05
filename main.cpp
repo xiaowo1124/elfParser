@@ -205,13 +205,22 @@ int main(int argc, char* argv[]) {
             return 0;
         }
         readELFHeader(file, header);
+        std::vector<Elf64_Shdr> sHeader(header.e_shnum);
+        std::vector<Elf64_Phdr> pHeader(header.e_phnum);
         disPlayHeader(header);
-        
+        readELFSecitons(file, header, sHeader);
+        readELFProgramHeader(file, header, pHeader);
+
     } else {
         for (int i = optind; i < argc; ++i) {
-            string filepath = argv[optind];
-            cout << "文件:" << filepath << endl;
-            Elf32_Ehdr header;
+            string filePath = argv[optind];
+            cout << "文件:" << filePath << endl;
+            Elf64_Ehdr header;
+            ifstream file(filePath, std::ios::binary);
+            if (!file) {
+                std::cerr << "elfParser: 错误: '" << filePath <<"': 没有这个文件，请检查文件是否存在或者文件路径是否正确" <<  std::endl;
+                return 0;
+            }
         }
     }
     return 0;

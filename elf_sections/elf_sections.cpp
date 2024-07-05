@@ -1,7 +1,7 @@
 
 #include "elf_sections.h"
 
-void readELFSecitons(std::ifstream &file, Elf64_Ehdr &header, Elf64_Shdr &sHeader)
+void readELFSecitons(std::ifstream &file, Elf64_Ehdr &header, std::vector<Elf64_Shdr> &sHeader)
 {
     // 检查文件是否包含节头表
     if (header.e_shoff == 0 || header.e_shnum == 0) {
@@ -13,27 +13,26 @@ void readELFSecitons(std::ifstream &file, Elf64_Ehdr &header, Elf64_Shdr &sHeade
     file.seekg(header.e_shoff, std::ios::beg);
 
     // 读取节头表
-    std::vector<Elf64_Shdr> sectionHeaders(header.e_shnum);
-    file.read(reinterpret_cast<char*>(sectionHeaders.data()), header.e_shnum * header.e_shentsize);
+
+    file.read(reinterpret_cast<char*>(sHeader.data()), header.e_shnum * header.e_shentsize);
     if (!file) {
-        std::cerr << "Error reading section headers\n";
+        std::cerr << "读取节区头部表错误\n";
         return;
     }
 
     // 读取节头字符串表
-    const Elf64_Shdr& shstrtabHeader = sectionHeaders[header.e_shstrndx];
+    const Elf64_Shdr& shstrtabHeader = sHeader[header.e_shstrndx];
     std::vector<char> shstrtab(shstrtabHeader.sh_size);
     file.seekg(shstrtabHeader.sh_offset, std::ios::beg);
     file.read(shstrtab.data(), shstrtabHeader.sh_size);
     if (!file) {
-        std::cerr << "Error reading section header string table\n";
+        std::cerr << "读取节区头部字符表错误\n";
         return;
     }
-    disPlaySHeader(sectionHeaders,shstrtab);
-
+    disPlaySHeader(sHeader, shstrtab);
 }
 
-void disPlaySHeader(std::vector<Elf64_Shdr> sectionHeaders,std::vector<char> shstrtab)
+void disPlaySHeader(std::vector<Elf64_Shdr> &sectionHeaders, std::vector<char> &shstrtab)
 {
     std::map<Elf64_Word, std::string> typeMap = {
         {0, "NULL"},
@@ -65,7 +64,7 @@ void disPlaySHeader(std::vector<Elf64_Shdr> sectionHeaders,std::vector<char> shs
     std::cout << std::left << std::setw(12) << std::setfill(' ') << "旗标";
     std::cout << std::left << std::setw(12) << std::setfill(' ') << "链接";
     std::cout << std::left << std::setw(12) << std::setfill(' ') << "信息";
-    std::cout << std::left << std::setw(12) << std::setfill(' ') << "对齐" << std::endl;
+    std::cout << std::left << std::setfill(' ') << "对齐" << std::endl;
     for (size_t i = 0; i < sectionHeaders.size(); ++i) {
         const Elf64_Shdr& section = sectionHeaders[i];
         std::string sectionName(&shstrtab[section.sh_name]);
@@ -86,13 +85,11 @@ void disPlaySHeader(std::vector<Elf64_Shdr> sectionHeaders,std::vector<char> shs
     W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
     L (link order), O (extra OS processing required), G (group), T (TLS),
     C (compressed), x (unknown), o (OS specific), E (exclude),
-    l (large), p (processor specific))";
+    l (large), p (processor specific)\n)";
     std::cout << ps <<std::endl;
     
 }
 
-void printSectionHeader(const Elf64_Shdr& section, const std::string& name) {
-}
 
 std::string getFlag(Elf64_Xword flags) {
     std::map<Elf64_Xword, char> flagMap = {
