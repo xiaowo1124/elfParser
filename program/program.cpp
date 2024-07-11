@@ -38,6 +38,12 @@ void diplayProgramHeader(std::vector<Elf64_Phdr> &pHeader, std::ifstream &file) 
         {0x6474e553, "GNU_PROPERTY"}
     };
 
+    std::map<Elf64_Word, char> flags = {
+        {1, 'E'},
+        {2, 'W'},
+        {4, 'R'}
+    };
+
     std::cout << "程序头:" << std::endl;
     std::cout << "  " << std::left << std::setw(15) << std::setfill(' ') << "类型";
     std::cout << "  " << std::left << std::setw(19) << std::setfill(' ') << "偏移";
@@ -50,21 +56,20 @@ void diplayProgramHeader(std::vector<Elf64_Phdr> &pHeader, std::ifstream &file) 
     std::cout << "  " << std::left << std::setw(9) << std::setfill(' ') << "对齐" <<std::endl;
 
     for (Elf64_Phdr pro:pHeader) {
-        std::cout << "  " << std::left << std::setw(15) << std::setfill(' ') << type.count(pro.p_type)?type[pro.p_type]:"UNKNOWN";
+        std::cout << "  " << std::left << std::setw(15) << std::setfill(' ') << (type.count(pro.p_type)?type[pro.p_type]:"UNKNOWN");
         std::cout << "0x" << std::right << std::setw(16) << std::setfill('0') << std::hex << pro.p_offset << " ";
         std::cout << "0x" << std::right << std::setw(16) << std::setfill('0') << pro.p_vaddr << " ";
         std::cout << "0x" << std::right << std::setw(16) << std::setfill('0') << pro.p_paddr << std::endl;
         std::cout << std::setw(17) << std::setfill(' ') << " ";
         std::cout << "0x" << std::right << std::setw(16) << std::setfill('0') << pro.p_filesz << " ";
         std::cout << "0x" << std::right << std::setw(16) << std::setfill('0') << pro.p_memsz << " ";
-        std::cout << "0x" << pro.p_flags << "      ";
+        std::cout << ((pro.p_flags&4)?flags[4]:' ') << ((pro.p_flags&2)?flags[2]:' ') << ((pro.p_flags&1)?flags[1]:' ') << "      ";
         std::cout << "0x" << pro.p_align << std::endl;
-
         if (pro.p_type == 3) {
             // 将指针移动到程序头表的起始位置
             file.seekg(pro.p_offset, std::ios::beg);
             std::vector<char> interp(pro.p_filesz);
-            file.read(interp.data(), std::ios::beg);
+            file.read(interp.data(), pro.p_filesz);
             std::string interpStr(interp.data());
             std::cout << "      [Requesting program interpreter: " << interpStr << "]" << std::endl;
         }

@@ -64,7 +64,7 @@ void disPlaySHeader(std::vector<Elf64_Shdr> &sectionHeaders, std::vector<char> &
     std::cout << std::left << std::setw(12) << std::setfill(' ') << "旗标";
     std::cout << std::left << std::setw(12) << std::setfill(' ') << "链接";
     std::cout << std::left << std::setw(12) << std::setfill(' ') << "信息";
-    std::cout << std::left << std::setfill(' ') << "对齐" << std::endl;
+    std::cout << std::left << "对齐" << std::endl;
     for (size_t i = 0; i < sectionHeaders.size(); ++i) {
         const Elf64_Shdr& section = sectionHeaders[i];
         std::string sectionName(&shstrtab[section.sh_name]);
@@ -79,14 +79,14 @@ void disPlaySHeader(std::vector<Elf64_Shdr> &sectionHeaders, std::vector<char> &
         std::cout << std::left << std::setw(10) << std::setfill(' ') << getFlag(section.sh_flags);
         std::cout << std::left << std::setw(10) << std::setfill(' ') << std::dec << section.sh_link;
         std::cout << std::left << std::setw(10) << std::setfill(' ') << section.sh_info;
-        std::cout << std::left << std::setw(10) << std::setfill(' ') << section.sh_addralign << std::endl;
+        std::cout << std::left << section.sh_addralign << std::endl;
     }
     std::string ps = R"(Key to Flags: 
     W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
     L (link order), O (extra OS processing required), G (group), T (TLS),
     C (compressed), x (unknown), o (OS specific), E (exclude),
-    l (large), p (processor specific)\n)";
-    std::cout << ps <<std::endl;
+    l (large), p (processor specific))";
+    std::cout << ps <<std::endl << std::endl;
     
 }
 
