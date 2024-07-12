@@ -17,11 +17,9 @@ void readELFProgramHeader(std::ifstream &file, Elf64_Ehdr &header, std::vector<E
         std::cerr << "读取程序头表错误\n";
         return;
     }
-    diplayProgramHeader(pHeader, file);
-
 }
 
-void diplayProgramHeader(std::vector<Elf64_Phdr> &pHeader, std::ifstream &file) {
+void diplayProgramHeader(std::vector<Elf64_Phdr> &pHeader, std::ifstream &file, std::vector<Elf64_Shdr> &sHeader, std::vector<char> &shstrtab) {
     std::map<Elf64_Word, std::string> type = {
         {0, "NULL"},
         {1, "LOAD"},
@@ -74,4 +72,19 @@ void diplayProgramHeader(std::vector<Elf64_Phdr> &pHeader, std::ifstream &file) 
             std::cout << "      [Requesting program interpreter: " << interpStr << "]" << std::endl;
         }
     }
+
+    std::cout << " 段到节的映射:" << std::endl;
+    std::cout << "   段    节..." << std::endl;
+
+    for (int i = 0; i < pHeader.size(); ++i) {
+        std::cout << "   " << std::setw(2) << std::setfill('0') << std::dec << i << "   ";
+        for (int j = 0; j < sHeader.size(); ++j) {
+            if (sHeader[j].sh_offset >= pHeader[i].p_offset && sHeader[j].sh_offset + sHeader[j].sh_size <= pHeader[i].p_offset + pHeader[i].p_filesz) {
+                std::string sectionName(&shstrtab[sHeader[j].sh_name]);
+                std::cout << sectionName << " ";
+            }
+        }
+        std::cout << std::endl;
+    }
 }
+

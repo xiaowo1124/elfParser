@@ -8,4 +8,5 @@
 
 void readELFProgramHeader(std::ifstream &file, Elf64_Ehdr &header, std::vector<Elf64_Phdr> &pHeader);
 
-void diplayProgramHeader(std::vector<Elf64_Phdr> &pHeader, std::ifstream &file);
+void diplayProgramHeader(std::vector<Elf64_Phdr> &pHeader, std::ifstream &file, std::vector<Elf64_Shdr> &sHeader, std::vector<char> &shstrtab);
+
