@@ -141,13 +141,9 @@ int main(int argc, char* argv[]) {
         if (relocs) {
             displayRelocation(file, header, sHeader, shstrtab);
         }
-        if (dyn_syms) {
+        if (syms) {
             displayDynsym(file, header, sHeader, shstrtab);
         }
-        
-        
-        
-
     } 
     return 0;
 }
