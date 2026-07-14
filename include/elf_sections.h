@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <map>
 
-#include "../elf_header/elf_header.h"
+#include "elf_header.h"
 
 void readELFSecitons(std::ifstream &file, Elf64_Ehdr &header, std::vector<Elf64_Shdr> &sHeader);
 

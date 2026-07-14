@@ -1,9 +1,11 @@
 #include <getopt.h>
 #include <cstring>
 
-#include "elf_parser.h"
 #include <string.h>
 #include <vector>
+
+#include "elf_sections.h"
+#include "program.h"
 
 using namespace std;
 
@@ -107,7 +109,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (optind >= argc) {
-        cout << "elfparser: 错误: 无事可做\n";
+        cout << "elfparser: 错误: 未提供参数\n";
         show_help();
         return 0;
     }
